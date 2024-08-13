@@ -2,13 +2,13 @@ const asyncHandler = require('express-async-handler');
 const Product = require('../models/productModel');
 const {fileSizeFormatter} = require('../utiles/fileUpload');
 const cloudinary = require('cloudinary').v2;
-
+ 
 //create product
 const createProduct = asyncHandler(async (req, res) => {
-    const {name, sku, category, quantity, price, description} = req.body;
+    const {name, sku, category, quantity, price, description, manufacturingWarehouse, lastStop, currentStop, nextStop} = req.body;
 
     //validation
-    if(!name || !category || !quantity || !price || !description){
+    if(!name || !category || !quantity || !price || !description || !manufacturingWarehouse || !currentStop){
         res.status(400);
         throw new Error('Please add all fields');
     }
@@ -45,6 +45,10 @@ const createProduct = asyncHandler(async (req, res) => {
         price,
         description,
         image : fileData,
+        manufacturingWarehouse,
+        lastStop,
+        currentStop,
+        nextStop
     });
     res.status(201).json(product);
 });
@@ -89,13 +93,13 @@ const deleteProduct = asyncHandler(async (req, res) => {
         throw new Error('User not authorized');
     }
 
-    await product.remove();
+    await product.deleteOne();
     res.status(200).json({message: 'Product removed'});
 })
 
 //update product
 const updateProduct = asyncHandler(async (req, res) => {
-    const {name, category, quantity, price, description} = req.body;
+    const {name, category, quantity, price, description, manufacturingWarehouse, lastStop, currentStop, nextStop } = req.body;
     const  {id} = req.params;
 
     const product = await Product.findById(id);
@@ -144,6 +148,10 @@ const updateProduct = asyncHandler(async (req, res) => {
                 price,
                 description,
                 image : Object.keys(fileData).length === 0 ? product?.image : fileData,
+                manufacturingWarehouse,
+                lastStop,
+                currentStop,
+                nextStop
         },
         {
             new: true,

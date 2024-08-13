@@ -10,6 +10,7 @@ const errorHandler = require('./middleware/errorMiddleware');
 const userRoute = require('./routes/userRoute');
 const productRoute = require('./routes/productRoute');
 const contactRoute = require('./routes/contactRoute');
+const warehouseRoute = require('./routes/warehouseRoute');
 
 const app = express();
 
@@ -30,6 +31,7 @@ app.use(
 app.use('/api/users', userRoute);
 app.use("/api/products", productRoute);
 app.use("/api/contactus", contactRoute);
+app.use("/api/warehouses", warehouseRoute);
 
 
 //routes
