@@ -1,4 +1,4 @@
-# Wallmart Sparkathon Warehouse Management System
+# Walmart Sparkathon Warehouse Management System
 A warehouse management application for tracking products, stock levels, and sales. This project provides a simple and efficient way to manage your inventory and keep tabs on product availability.
 
 ## Features 
