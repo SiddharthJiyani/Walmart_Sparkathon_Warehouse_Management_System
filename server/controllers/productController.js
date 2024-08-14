@@ -97,10 +97,10 @@ const getProduct = asyncHandler(async (req, res) => {
     }
 
     //match product to user
-    if(product.user.toString() !== req.user.id){
-        res.status(401);
-        throw new Error('User not authorized');
-    }
+    // if(product.user.toString() !== req.user.id){
+    //     res.status(401);
+    //     throw new Error('User not authorized');
+    // }
     res.status(200).json(product);
 })
 
