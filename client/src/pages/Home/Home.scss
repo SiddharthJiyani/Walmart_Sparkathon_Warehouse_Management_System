@@ -1,13 +1,24 @@
 .home {
-  background-color: #030b6b;
+  // background-color: #5687b1;
+  background-color: #063561;
+  // background-color: #5687b19d;
   min-height: 100vh;
+  overflow: hidden;
 
   & nav {
     padding-top: 1.5rem;
     padding-bottom: 1.5rem;
+    width: 100%;
     color: #fff;
+    // background: #063561;
+    background: #b2dbfe;
+    padding-left: 10rem;
+    padding-right: 10rem;
+    max-height: 85px;
     & > .logo {
       color: #fff;
+      cursor: pointer;
+      padding-top: 7px;
     }
   }
 }
@@ -28,10 +39,15 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  padding-right: 5rem;
+  margin: 0 auto; 
+  margin-left: 10rem;
+  overflow: hidden;
 }
 
 .hero-text {
   width: 50%;
+  max-width: 500px;
   & > * {
     color: #fff;
     margin-bottom: 2rem;
@@ -49,6 +65,7 @@
 @media screen and (max-width: 600px) {
   .hero {
     flex-direction: column;
+    margin-left: 3px;
   }
 
   .hero-text {
@@ -61,9 +78,100 @@
     text-align: center;
   }
   .hero-image {
-    width: 100%;
+    width: 50%;
     &img {
-      width: 100%;
+      width: 50%;
     }
   }
+}
+
+@media screen and (max-width: 768px) {
+  .home nav {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+  
+  .home-links {
+    & > * {
+      margin-left: 0;
+      margin-bottom: 1rem;
+    }
+  }
+
+  .hero {
+    flex-direction: column;
+    padding-right: 2rem;
+    margin-left: 0;
+  }
+
+  .hero-text {
+    width: 90%;
+    max-width: 100%;
+    margin: 1rem auto;
+    text-align: center;
+  }
+
+  .hero-image {
+    width: 80%;
+    margin: 1rem auto;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .home nav {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+
+  .hero-text {
+    width: 100%;
+    margin: 1rem auto;
+    text-align: center;
+    padding: 0 1rem;
+  }
+
+  .hero-image {
+    width: 100%;
+    text-align: center;
+
+    img {
+      width: 80%;
+      margin: 0 auto;
+    }
+  }
+
+  p {
+    font-size: 1.5rem;
+    line-height: 1.4;
+    max-width: 100%;
+  }
+
+  .btn {
+    padding: 1.2rem 1.4rem;
+    margin: 0.5rem;
+  }
+}
+
+
+
+.btn{
+  display: inline-block;
+  padding: 1.5rem 1.6rem;
+  margin: 0.75rem;
+  border-radius: 5px;
+  background-color: #0084ff;
+  color: #fff;
+  text-decoration: none;
+  text-align: center;
+  cursor: pointer;
+  border: 1px solid #000;
+  
+
+}
+p{
+  font-size: 1.8rem;
+  line-height: 1.5;
+  max-width: 80%;
 }
