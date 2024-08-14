@@ -20,20 +20,19 @@ import { Link } from "react-router-dom";
 
 const ProductList = ({ products, isLoading }) => {
   const [search, setSearch] = useState("");
+  const [warehouseMap, setWarehouseMap] = useState({});
   const filteredProducts = useSelector(selectFilteredPoducts);
 
   const dispatch = useDispatch();
 
   const shortenText = (text, n) => {
     if (text && text.length > n) {
-      const shortenedText = text.substring(0, n).concat("...");
-      return shortenedText;
+      return text.substring(0, n).concat("...");
     }
     return text;
   };
 
   const delProduct = async (id) => {
-    console.log(id);
     await dispatch(deleteProduct(id));
     await dispatch(getProducts());
   };
@@ -49,13 +48,12 @@ const ProductList = ({ products, isLoading }) => {
         },
         {
           label: "Cancel",
-          // onClick: () => alert('Click No')
         },
       ],
     });
   };
 
-  //   Begin Pagination
+  // Pagination setup
   const [currentItems, setCurrentItems] = useState([]);
   const [pageCount, setPageCount] = useState(0);
   const [itemOffset, setItemOffset] = useState(0);
@@ -63,7 +61,6 @@ const ProductList = ({ products, isLoading }) => {
 
   useEffect(() => {
     const endOffset = itemOffset + itemsPerPage;
-
     setCurrentItems(filteredProducts.slice(itemOffset, endOffset));
     setPageCount(Math.ceil(filteredProducts.length / itemsPerPage));
   }, [itemOffset, itemsPerPage, filteredProducts]);
@@ -72,11 +69,48 @@ const ProductList = ({ products, isLoading }) => {
     const newOffset = (event.selected * itemsPerPage) % filteredProducts.length;
     setItemOffset(newOffset);
   };
-  //   End Pagination
 
   useEffect(() => {
     dispatch(FILTER_PRODUCTS({ products, search }));
   }, [products, search, dispatch]);
+
+  // Fetch warehouse data for each product
+  useEffect(() => {
+    const fetchWarehouseData = async () => {
+      const warehouseData = {};
+      for (let product of filteredProducts) {
+        if (product.currentStop) {
+          const warehouse = await getWarehouse(product.currentStop);
+          warehouseData[product._id] = warehouse; // Map warehouse data by product ID
+        }
+      }
+      setWarehouseMap(warehouseData);
+    };
+
+    if (filteredProducts.length > 0) {
+      fetchWarehouseData();
+    }
+  }, [filteredProducts]);
+
+  const getWarehouse = async (id) => {
+    const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+    const API_URL = `${BACKEND_URL}/api/warehouses/${id}`;
+
+    try {
+      const res = await fetch(API_URL, {
+        method: "GET",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await res.json();
+      return data;
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
+  };
 
   return (
     <div className="product-list">
@@ -109,6 +143,7 @@ const ProductList = ({ products, isLoading }) => {
                   <th>Price</th>
                   <th>Quantity</th>
                   <th>Value</th>
+                  <th>Current Location</th>
                   <th>Action</th>
                 </tr>
               </thead>
@@ -116,6 +151,8 @@ const ProductList = ({ products, isLoading }) => {
               <tbody>
                 {currentItems.map((product, index) => {
                   const { _id, name, category, price, quantity } = product;
+                  const warehouse = warehouseMap[_id];
+
                   return (
                     <tr key={_id}>
                       <td>{index + 1}</td>
@@ -130,6 +167,7 @@ const ProductList = ({ products, isLoading }) => {
                         {"$"}
                         {price * quantity}
                       </td>
+                      <td>{warehouse ? shortenText(warehouse.name, 16) : "Loading..."}</td>
                       <td className="icons">
                         <span>
                           <Link to={`/product-detail/${_id}`}>

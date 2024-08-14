@@ -80,10 +80,21 @@ const deleteWarehouse = asyncHandler(async (req, res) => {
     res.status(200).json({ message: 'Warehouse removed' });
 });
 
+const getWarehouseById = asyncHandler(async (id) => {
+    try{
+        const warehouse = await Warehouse.findById(id);
+        return warehouse;
+    }
+    catch(error){
+        throw new Error('Warehouse not found');
+    }
+});
+
 module.exports = {
     createWarehouse,
     getWarehouses,
     getWarehouse,
     updateWarehouse,
     deleteWarehouse,
+    getWarehouseById,
 };
