@@ -84,6 +84,7 @@ main {
   justify-content: center;
   align-items: center;
   width: 1.5em;
+  padding-right: 0.5em;
   font-size: 25px;
 }
 
@@ -142,4 +143,9 @@ a {
 
 .sublink .sidebar-item .sidebar-title {
   padding-left: 40px;
+}
+
+.walmart_logo{
+  cursor: pointer;
+  
 }

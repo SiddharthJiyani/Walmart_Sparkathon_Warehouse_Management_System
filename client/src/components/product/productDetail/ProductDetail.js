@@ -16,6 +16,7 @@ const ProductDetail = () => {
   const { id } = useParams();
 
   const isLoggedIn = useSelector(selectIsLoggedIn);
+  console.log(isLoggedIn);
   const { product, isLoading, isError, message } = useSelector(
     (state) => state.product
   );

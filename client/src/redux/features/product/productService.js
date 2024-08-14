@@ -34,12 +34,18 @@ const updateProduct = async (id, formData) => {
   return response.data;
 };
 
+const getAllProducts = async () => {
+  const response = await axios.get(`${API_URL}getall`);
+  return response.data;
+};
+
 const productService = {
   createProduct,
   getProducts,
   getProduct,
   deleteProduct,
   updateProduct,
+  getAllProducts,
 };
 
 export default productService;

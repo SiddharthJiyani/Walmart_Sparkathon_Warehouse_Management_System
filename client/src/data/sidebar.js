@@ -1,5 +1,9 @@
 import { FaTh, FaRegChartBar, FaCommentAlt } from "react-icons/fa";
 import { BiImageAdd } from "react-icons/bi";
+import { ImProfile } from "react-icons/im";
+import { MdEditSquare } from "react-icons/md";
+
+
 
 const menu = [
   {
@@ -19,10 +23,12 @@ const menu = [
       {
         title: "Profile",
         path: "/profile",
+        icon: <ImProfile/>,
       },
       {
         title: "Edit Profile",
         path: "/edit-profile",
+        icon: <MdEditSquare />
       },
     ],
   },

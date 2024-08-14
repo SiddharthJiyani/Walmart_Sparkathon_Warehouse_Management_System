@@ -5,6 +5,7 @@ import { RiProductHuntLine } from "react-icons/ri";
 import menu from "../../data/sidebar";
 import SidebarItem from "./SidebarItem";
 import { useNavigate } from "react-router-dom";
+import logo from "./walmart_logo.svg" ;
 
 const Sidebar = ({ children }) => {
   const [isOpen, setIsOpen] = useState(true);
@@ -20,9 +21,8 @@ const Sidebar = ({ children }) => {
       <div className="sidebar" style={{ width: isOpen ? "230px" : "60px" }}>
         <div className="top_section">
           <div className="logo" style={{ display: isOpen ? "block" : "none" }}>
-            <RiProductHuntLine
-              size={35}
-              style={{ cursor: "pointer" }}
+            <img height={40} width={40} src={logo}
+              className="walmart_logo"
               onClick={goHome}
             />
           </div>
