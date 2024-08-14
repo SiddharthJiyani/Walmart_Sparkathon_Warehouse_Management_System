@@ -13,12 +13,14 @@ const initialState = {
   category: "",
   quantity: "",
   price: "",
-  manufacturerName: "",
-  manufacturerCountry: "",
-  manufacturerState: "",
-  manufacturerCity: "",
-  manufacturerPincode: "",
-  manufacturerAdminContact: "",
+  manufacturingWarehouse: {
+    country: "",
+    state: "",
+    city: "",
+    pincode: "",
+    warehouseAdminContact: "",
+    dateOfManufacture: "",
+  },
   dateOfManufacture: "",
   lastStop: "",
   currentStop: "",
@@ -36,16 +38,35 @@ const AddProduct = () => {
   const isLoading = useSelector(selectIsLoading);
 
   const { name, category, price, quantity  } = product;
-  console.log("product", product);
+  // console.log("product", product);
+
+  // const handleInputChange = (e) => {
+  //   const { name, value } = e.target;
+  //   setProduct({ ...product, [name]: value });
+  // };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setProduct({ ...product, [name]: value });
+
+    if (name in product.manufacturingWarehouse) {
+      setProduct((prevProduct) => ({
+        ...prevProduct,
+        manufacturingWarehouse: {
+          ...prevProduct.manufacturingWarehouse,
+          [name]: value,
+        },
+      }));
+    } else {
+      setProduct((prevProduct) => ({
+        ...prevProduct,
+        [name]: value,
+      }));
+    }
   };
 
   const handleImageChange = (e) => {
     setProductImage(e.target.files[0]);
-    console.log(e.target.files[0]);
+    // console.log(e.target.files[0]);
     setImagePreview(URL.createObjectURL(e.target.files[0]));
   };
 
@@ -56,37 +77,75 @@ const AddProduct = () => {
     return sku;
   };
 
+  // const saveProduct = async (e) => {
+  //   e.preventDefault();
+  //   const formData = new FormData();
+  //   formData.append("name", name);
+  //   formData.append("sku", generateKSKU(category));
+  //   formData.append("category", category);
+  //   formData.append("quantity", Number(quantity));
+  //   formData.append("price", price);
+  //   formData.append("description", description);
+  //   formData.append("image", productImage);
+    
+  //   // Manufacturing details
+  //   // formData.append("manufacturerName", product.manufacturerName);
+  //   formData.append("manufacturerCountry", product.manufacturerCountry);
+  //   formData.append("manufacturerState", product.manufacturerState);
+  //   formData.append("manufacturerCity", product.manufacturerCity);
+  //   formData.append("manufacturerPincode", product.manufacturerPincode);
+  //   formData.append("manufacturerAdminContact", product.manufacturerAdminContact);
+  //   formData.append("dateOfManufacture", product.dateOfManufacture);
+  
+  //   // Stop locations
+  //   formData.append("lastStop", product.lastStop);
+  //   formData.append("currentStop", product.currentStop);
+  //   formData.append("nextStop", product.nextStop);
+  
+  //   console.log("formdata in Add product",formData);
+  
+  //   dispatch(createProduct(formData));
+  
+  //   // navigate("/dashboard");
+  // };
+
   const saveProduct = async (e) => {
     e.preventDefault();
+    const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+    const API_URL = `${BACKEND_URL}/api/products/`;
+
     const formData = new FormData();
-    formData.append("name", name);
-    formData.append("sku", generateKSKU(category));
-    formData.append("category", category);
-    formData.append("quantity", Number(quantity));
-    formData.append("price", price);
+    formData.append("name", product.name);
+    formData.append("sku", generateKSKU(product.category));
+    formData.append("category", product.category);
+    formData.append("quantity", Number(product.quantity));
+    formData.append("price", product.price);
     formData.append("description", description);
-    formData.append("image", productImage);
-    
-    // Manufacturing details
-    // formData.append("manufacturerName", product.manufacturerName);
-    formData.append("manufacturerCountry", product.manufacturerCountry);
-    formData.append("manufacturerState", product.manufacturerState);
-    formData.append("manufacturerCity", product.manufacturerCity);
-    formData.append("manufacturerPincode", product.manufacturerPincode);
-    formData.append("manufacturerAdminContact", product.manufacturerAdminContact);
-    formData.append("dateOfManufacture", product.dateOfManufacture);
-  
-    // Stop locations
+    formData.append("image", {});
+    formData.append("manufacturingWarehouse", JSON.stringify(product.manufacturingWarehouse));
     formData.append("lastStop", product.lastStop);
     formData.append("currentStop", product.currentStop);
     formData.append("nextStop", product.nextStop);
-  
-    console.log("formdata",...formData);
-  
-    dispatch(createProduct(formData));
-  
-    // navigate("/dashboard");
-  };
+
+    try {
+        const response = await fetch(API_URL, {
+            method: 'POST',
+            body: formData,
+            credentials: 'include',
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to create product');
+        }
+
+        // const data = await response.json();
+        // console.log('Product created successfully:', data);
+        navigate('/dashboard');
+    } catch (error) {
+        console.error('Error:', error);
+    }
+};
+
   
 
   return (

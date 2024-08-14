@@ -14,13 +14,14 @@ const initialState = {
   category: [],
 };
 
-// Create New Product
+// Create New Product [chutiya code]
 export const createProduct = createAsyncThunk(
   "products/create",
   async (formData, thunkAPI) => {
-    console.log("formdata", formData);
-    try {
-      // console.log(formData);
+    // const entries = [...formData.entries()];
+    // console.log("FormData entries:", entries);
+    try { 
+      console.log("form data in productSlice: ",[...formData.entries()]);
       return await productService.createProduct(formData);
     } catch (error) {
       const message =
@@ -33,6 +34,7 @@ export const createProduct = createAsyncThunk(
       return thunkAPI.rejectWithValue(message);
     }
   }
+  // (formData)=>{console.log(formData);
 );
 
 // Get all products

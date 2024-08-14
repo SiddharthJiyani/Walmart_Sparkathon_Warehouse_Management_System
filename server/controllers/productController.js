@@ -6,35 +6,55 @@ const cloudinary = require('cloudinary').v2;
 //create product
 const createProduct = asyncHandler(async (req, res) => {
     const {name, sku, category, quantity, price, description, manufacturingWarehouse, lastStop, currentStop, nextStop} = req.body;
-
+    console.log('Received data:', {
+        name,
+        sku,
+        category,
+        quantity,
+        price,
+        description,
+        manufacturingWarehouse,
+        lastStop,
+        currentStop,
+        nextStop
+    });
     //validation
     if(!name || !category || !quantity || !price || !description || !manufacturingWarehouse || !currentStop){
         res.status(400);
         throw new Error('Please add all fields');
     }
 
+    let parsedManufacturingWarehouse;
+    try {
+        parsedManufacturingWarehouse = JSON.parse(manufacturingWarehouse);
+    } catch (error) {
+        res.status(400);
+        throw new Error('Invalid manufacturingWarehouse format');
+    }
+
+
     // handle image upload
     let fileData = {};
-    if (req.file) {
-        // save image to cloudinary
-        let uploadedFile;
-        try {
-            uploadedFile = await cloudinary.uploader.upload(req.file.path, {
-                folder: "Walmart's Inventory",
-                resource_type: 'image',
-            });
-        } catch (error) {
-            res.status(500);
-            throw new Error('Image upload failed');
-        }
+    // if (req.file) {
+    //     // save image to cloudinary
+    //     let uploadedFile;
+    //     try {
+    //         uploadedFile = await cloudinary.uploader.upload(req.file.path, {
+    //             folder: "Walmart's Inventory",
+    //             resource_type: 'image',
+    //         });
+    //     } catch (error) {
+    //         res.status(500);
+    //         throw new Error('Image upload failed');
+    //     }
         
-        fileData = {
-            fileName: req.file.originalname,
-            filePath: uploadedFile.secure_url,
-            fileType: req.file.mimetype,
-            fileSize: fileSizeFormatter(req.file.size, 2),
-        };
-    }   
+    //     fileData = {
+    //         fileName: req.file.originalname,
+    //         filePath: uploadedFile.secure_url,
+    //         fileType: req.file.mimetype,
+    //         fileSize: fileSizeFormatter(req.file.size, 2),
+    //     };
+    // }   
 
 
     //create product
@@ -47,11 +67,16 @@ const createProduct = asyncHandler(async (req, res) => {
         price,
         description,
         image : fileData,
-        manufacturingWarehouse,
+        manufacturingWarehouse: parsedManufacturingWarehouse,
         lastStop,
         currentStop,
         nextStop
+    }).then((product) => {
+        console.log('Product created:', product);
+    }).catch((error) => {
+        console.error('Error creating product:', error);
     });
+    // console.log('ok');
     res.status(201).json(product);
 });
 

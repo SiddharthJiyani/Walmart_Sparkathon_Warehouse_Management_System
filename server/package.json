@@ -18,9 +18,9 @@
     "path": "^0.12.7"
   },
   "scripts": {
-		"start": "node index.js",
-		"dev": "nodemon index.js"
-	},
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
   "name": "backend",
   "version": "1.0.0",
   "main": "server.js",

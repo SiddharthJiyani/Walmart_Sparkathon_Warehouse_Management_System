@@ -140,8 +140,8 @@ const ProductForm = ({
               <input
                 type="text"
                 placeholder="Manufacturer Country"
-                name="manufacturerCountry"
-                value={product?.manufacturerCountry}
+                name="country"
+                value={product.manufacturingWarehouse?.country}
                 onChange={handleInputChange}
                 required
               />
@@ -150,8 +150,8 @@ const ProductForm = ({
               <input
                 type="text"
                 placeholder="Manufacturer State"
-                name="manufacturerState"
-                value={product?.manufacturerState}
+                name="state"
+                value={product?.manufacturingWarehouse?.state}
                 onChange={handleInputChange}
                 required
               />
@@ -160,8 +160,8 @@ const ProductForm = ({
               <input
                 type="text"
                 placeholder="Manufacturer City"
-                name="manufacturerCity"
-                value={product?.manufacturerCity}
+                name="city"
+                value={product?.manufacturingWarehouse?.city}
                 onChange={handleInputChange}
                 required
               />
@@ -170,8 +170,8 @@ const ProductForm = ({
               <input
                 type="text"
                 placeholder="Manufacturer Pincode"
-                name="manufacturerPincode"
-                value={product?.manufacturerPincode}
+                name="pincode"
+                value={product?.manufacturingWarehouse?.pincode}
                 onChange={handleInputChange}
                 required
               />
@@ -180,8 +180,8 @@ const ProductForm = ({
               <input
                 type="text"
                 placeholder="Manufacturer Admin Contact"
-                name="manufacturerAdminContact"
-                value={product?.manufacturerAdminContact}
+                name="warehouseAdminContact"
+                value={product?.manufacturingWarehouse?.warehouseAdminContact}
                 onChange={handleInputChange}
                 required
               />
@@ -191,7 +191,7 @@ const ProductForm = ({
                 type="date"
                 placeholder="Date of Manufacture"
                 name="dateOfManufacture"
-                value={product?.dateOfManufacture}
+                value={product?.manufacturingWarehouse?.dateOfManufacture}
                 onChange={handleInputChange}
                 required
               />

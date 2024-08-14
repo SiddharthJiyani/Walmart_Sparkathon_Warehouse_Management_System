@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const protect = require('../middleware/authMiddleware');
+
 const {
     createProduct,
     getProducts,
@@ -11,7 +12,7 @@ const {
 } = require('../controllers/productController');
 const upload = require('../utiles/fileUpload');
 
-router.post('/', protect, upload.upload.single('image'), createProduct);
+router.post('/',protect , upload.upload.single('image'), createProduct);
 router.patch('/:id', protect, upload.upload.single('image'), updateProduct);
 router.get('/', protect ,getProducts);
 router.get('/getall', protect , getAllProducts);
