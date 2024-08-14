@@ -13,6 +13,16 @@ const initialState = {
   category: "",
   quantity: "",
   price: "",
+  manufacturerName: "",
+  manufacturerCountry: "",
+  manufacturerState: "",
+  manufacturerCity: "",
+  manufacturerPincode: "",
+  manufacturerAdminContact: "",
+  dateOfManufacture: "",
+  lastStop: "",
+  currentStop: "",
+  nextStop: "",
 };
 
 const AddProduct = () => {
@@ -25,7 +35,8 @@ const AddProduct = () => {
 
   const isLoading = useSelector(selectIsLoading);
 
-  const { name, category, price, quantity } = product;
+  const { name, category, price, quantity  } = product;
+  console.log("product", product);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -34,6 +45,7 @@ const AddProduct = () => {
 
   const handleImageChange = (e) => {
     setProductImage(e.target.files[0]);
+    console.log(e.target.files[0]);
     setImagePreview(URL.createObjectURL(e.target.files[0]));
   };
 
@@ -54,13 +66,28 @@ const AddProduct = () => {
     formData.append("price", price);
     formData.append("description", description);
     formData.append("image", productImage);
-
-    console.log(...formData);
-
+    
+    // Manufacturing details
+    // formData.append("manufacturerName", product.manufacturerName);
+    formData.append("manufacturerCountry", product.manufacturerCountry);
+    formData.append("manufacturerState", product.manufacturerState);
+    formData.append("manufacturerCity", product.manufacturerCity);
+    formData.append("manufacturerPincode", product.manufacturerPincode);
+    formData.append("manufacturerAdminContact", product.manufacturerAdminContact);
+    formData.append("dateOfManufacture", product.dateOfManufacture);
+  
+    // Stop locations
+    formData.append("lastStop", product.lastStop);
+    formData.append("currentStop", product.currentStop);
+    formData.append("nextStop", product.nextStop);
+  
+    console.log("formdata",...formData);
+  
     dispatch(createProduct(formData));
-
-    navigate("/dashboard");
+  
+    // navigate("/dashboard");
   };
+  
 
   return (
     <div>

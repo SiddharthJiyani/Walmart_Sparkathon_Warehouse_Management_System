@@ -13,27 +13,29 @@ const createProduct = asyncHandler(async (req, res) => {
         throw new Error('Please add all fields');
     }
 
-    //handle image upload
-    let fileData={};
-    if(req.file){
-        //save image to cloudinary
-        let uploadadedFile ;
+    // handle image upload
+    let fileData = {};
+    if (req.file) {
+        // save image to cloudinary
+        let uploadedFile;
         try {
-            uploadadedFile = await cloudinary.uploader.upload(req.file.path),{
-                folder : "Walmart's Inventory",
-                resource_type : 'image',
-            }
-        }catch(error){
+            uploadedFile = await cloudinary.uploader.upload(req.file.path, {
+                folder: "Walmart's Inventory",
+                resource_type: 'image',
+            });
+        } catch (error) {
             res.status(500);
             throw new Error('Image upload failed');
         }
+        
         fileData = {
-            fileName : req.file.originalname,
-            filePath : uploadadedFile.secure_url,
-            fileType : req.file.mimetype,
-            fileSize : fileSizeFormatter(req.file, 2),
+            fileName: req.file.originalname,
+            filePath: uploadedFile.secure_url,
+            fileType: req.file.mimetype,
+            fileSize: fileSizeFormatter(req.file.size, 2),
         };
-    }
+    }   
+
 
     //create product
     const product = await Product.create({
@@ -161,11 +163,23 @@ const updateProduct = asyncHandler(async (req, res) => {
     res.status(200).json(updatedProduct);
 })
 
+const getAllProducts = asyncHandler(async (req, res) => {
+    try{
+        const products = await Product.find({});
+        res.status(200).json(products);
+    }
+    catch(error){
+        res.status(500);
+        throw new Error('Server error');
+    }
+})
+
 
 module.exports = {
     createProduct,
     getProducts,
     getProduct,
     deleteProduct,
-    updateProduct
+    updateProduct,
+    getAllProducts
 }

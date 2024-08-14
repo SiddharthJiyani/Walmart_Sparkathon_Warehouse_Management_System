@@ -18,8 +18,9 @@ const initialState = {
 export const createProduct = createAsyncThunk(
   "products/create",
   async (formData, thunkAPI) => {
+    console.log("formdata", formData);
     try {
-      console.log(formData);
+      // console.log(formData);
       return await productService.createProduct(formData);
     } catch (error) {
       const message =
@@ -36,10 +37,10 @@ export const createProduct = createAsyncThunk(
 
 // Get all products
 export const getProducts = createAsyncThunk(
-  "products/getAll",
+  "products/getall",
   async (_, thunkAPI) => {
     try {
-      return await productService.getProducts();
+      return await productService.getAllProducts();
     } catch (error) {
       const message =
         (error.response &&
