@@ -30,11 +30,11 @@ const ChangePassword = () => {
 
     const formData = {
       oldPassword,
-      password,
+      password, 
     };
 
     const data = await changePassword(formData);
-    toast.success(data);
+    toast.success("Password changed successfully");
     navigate("/profile");
   };
 

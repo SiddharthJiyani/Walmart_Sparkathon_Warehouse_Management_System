@@ -49,6 +49,18 @@ const Forgot = () => {
             <button type="submit" className="--btn --btn-primary --btn-block">
               Get Reset Email
             </button>
+            {/* tell to check spam forder if mail is not received */}
+            <span style={
+              { color: "#777777",
+                fontSize: "1rem",
+                marginTop: "1rem",
+                display: "block",
+                textAlign: "center", 
+                fontWeight: "400"
+              }
+            }>
+              *If you do not receive an email, please check your <span style={{fontWeight: "600"}}>spam</span> folder.
+            </span>
             <div className={styles.links}>
               <p>
                 <Link to="/">- Home</Link>

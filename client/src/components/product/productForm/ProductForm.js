@@ -20,7 +20,6 @@ const ProductForm = ({
   const [warehouses, setWarehouses] = useState([]);
   const getWarehousesDetails = async () => {
     const data = await getWarehouses();
-    console.log("warehouse data",data)
     setWarehouses(data);
   }
 

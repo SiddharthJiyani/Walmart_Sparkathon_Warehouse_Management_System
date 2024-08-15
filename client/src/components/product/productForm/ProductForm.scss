@@ -39,11 +39,11 @@
 }
 
 .image-preview {
-  width: 30%;
+  width: 50%;
   height: 40%;
   max-height: 280px;
   max-width: 280px;
-  background: var(--dark-blue);
+  // background: rgba(128, 128, 128, 0.31);
   padding: 1rem;
   border-radius: 3px;
   overflow: hidden;
