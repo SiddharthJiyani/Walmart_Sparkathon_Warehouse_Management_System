@@ -141,7 +141,7 @@ const ProductForm = ({
                 type="text"
                 placeholder="Manufacturer Country"
                 name="country"
-                value={product.manufacturingWarehouse?.country}
+                value={product?.manufacturingWarehouse?.country}
                 onChange={handleInputChange}
                 required
               />
@@ -202,7 +202,7 @@ const ProductForm = ({
               <label>Last stop : </label>
               <select
                 name="lastStop"
-                value={product.lastStop}
+                value={product?.lastStop}
                 onChange={handleInputChange}
               >
                 <option value="">Select</option>
@@ -216,7 +216,7 @@ const ProductForm = ({
               <label>Current Location : </label>
               <select
                 name="currentStop"
-                value={product.currentStop}
+                value={product?.currentStop}
                 onChange={handleInputChange}
               >
                 <option value="">Select</option>
@@ -230,7 +230,7 @@ const ProductForm = ({
               <label>Next Stop: </label>
               <select
                 name="nextStop"
-                value={product.nextStop}
+                value={product?.nextStop}
                 onChange={handleInputChange}
               >
                 <option value="">Select</option>

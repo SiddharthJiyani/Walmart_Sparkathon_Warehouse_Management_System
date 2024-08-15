@@ -40,14 +40,33 @@ const EditProduct = () => {
     );
   }, [productEdit]);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setProduct({ ...product, [name]: value });
-  };
+  // const handleInputChange = (e) => {
+  //   const { name, value } = e.target;
+  //   setProduct({ ...product, [name]: value });
+  // };
 
   const handleImageChange = (e) => {
     setProductImage(e.target.files[0]);
     setImagePreview(URL.createObjectURL(e.target.files[0]));
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+
+    if (name in product.manufacturingWarehouse) {
+      setProduct((prevProduct) => ({
+        ...prevProduct,
+        manufacturingWarehouse: {
+          ...prevProduct.manufacturingWarehouse,
+          [name]: value,
+        },
+      }));
+    } else {
+      setProduct((prevProduct) => ({
+        ...prevProduct,
+        [name]: value,
+      }));
+    }
   };
 
   const saveProduct = async (e) => {
