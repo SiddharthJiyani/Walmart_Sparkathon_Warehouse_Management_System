@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import Loader from "../../components/loader/Loader";
 import ProductForm from "../../components/product/productForm/ProductForm";
 import {
-  createProduct,
   selectIsLoading,
 } from "../../redux/features/product/productSlice";
 import axios from "axios";
@@ -39,14 +38,14 @@ const AddProduct = () => {
 
   const isLoading = useSelector(selectIsLoading);
 
-  const { name, category, price, quantity  } = product;
+  // const { name, category, price, quantity  } = product;
   // console.log("product", product);
 
   // const handleInputChange = (e) => {
   //   const { name, value } = e.target;
   //   setProduct({ ...product, [name]: value });
   // };
-
+ 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
 

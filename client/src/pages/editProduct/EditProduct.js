@@ -40,35 +40,71 @@ const EditProduct = () => {
     );
   }, [productEdit]);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setProduct({ ...product, [name]: value });
-  };
+  // const handleInputChange = (e) => {
+  //   const { name, value } = e.target;
+  //   setProduct({ ...product, [name]: value });
+  // };
 
   const handleImageChange = (e) => {
     setProductImage(e.target.files[0]);
     setImagePreview(URL.createObjectURL(e.target.files[0]));
   };
 
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+
+    if (name in product.manufacturingWarehouse) {
+      setProduct((prevProduct) => ({
+        ...prevProduct,
+        manufacturingWarehouse: {
+          ...prevProduct.manufacturingWarehouse,
+          [name]: value,
+        },
+      }));
+    } else {
+      setProduct((prevProduct) => ({
+        ...prevProduct,
+        [name]: value,
+      }));
+    }
+  };
+ 
   const saveProduct = async (e) => {
     e.preventDefault();
+    const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+    const productId = product?._id;
+    const API_URL = `${BACKEND_URL}/api/products/${productId}`;
+
     const formData = new FormData();
-    formData.append("name", product?.name);
-
-    formData.append("category", product?.category);
-    formData.append("quantity", product?.quantity);
-    formData.append("price", product?.price);
+    formData.append("name", product.name);
+    formData.append("category", product.category);
+    formData.append("quantity", Number(product.quantity));
+    formData.append("price", product.price);
     formData.append("description", description);
-    if (productImage) {
-      formData.append("image", productImage);
+    formData.append("image", {});
+    formData.append("manufacturingWarehouse", JSON.stringify(product.manufacturingWarehouse));
+    formData.append("lastStop", product.lastStop);
+    formData.append("currentStop", product.currentStop);
+    formData.append("nextStop", product.nextStop);
+
+    try {
+        const response = await fetch(API_URL, {
+            method: 'PATCH',
+            body: formData,
+            credentials: 'include',
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to edit product');
+        }
+
+        // const data = await response.json();
+        // console.log('Product created successfully:', data);
+        navigate('/dashboard');
+    } catch (error) {
+        console.error('Error:', error);
     }
-
-    console.log(...formData);
-
-    await dispatch(updateProduct({ id, formData }));
-    await dispatch(getProducts());
-    navigate("/dashboard");
-  };
+};
 
   return (
     <div>
@@ -83,6 +119,7 @@ const EditProduct = () => {
         handleInputChange={handleInputChange}
         handleImageChange={handleImageChange}
         saveProduct={saveProduct}
+        isEditMode={true}
       />
     </div>
   );

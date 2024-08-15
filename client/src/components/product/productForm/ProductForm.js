@@ -15,6 +15,7 @@ const ProductForm = ({
   handleInputChange,
   handleImageChange,
   saveProduct,
+  isEditMode
 }) => {
   const [warehouses, setWarehouses] = useState([]);
   const getWarehousesDetails = async () => {
@@ -44,7 +45,7 @@ const ProductForm = ({
                   type="file"
                   name="image"
                   onChange={(e) => handleImageChange(e)}
-                  required
+                  {...(isEditMode ? {} : { required: true })}
                 />
 
                 {imagePreview != null ? (
@@ -62,7 +63,7 @@ const ProductForm = ({
                 name="name"
                 value={product?.name}
                 onChange={handleInputChange}
-                required
+                {...(isEditMode ? {} : { required: true })}
               />
 
               <label>Product Category:</label>
@@ -78,7 +79,7 @@ const ProductForm = ({
                 name="category"
                 value={product?.category}
                 onChange={handleInputChange}
-                required>
+                {...(isEditMode ? {} : { required: true })}>
                 <option value="">Select Category</option>
                 <option value="electronics">Electronics</option>
                 <option value="fashion">Fashion</option>
@@ -98,7 +99,7 @@ const ProductForm = ({
                 name="price"
                 value={product?.price}
                 onChange={handleInputChange}
-                required
+                {...(isEditMode ? {} : { required: true })}
               />
 
               <label>Product Quantity:</label>
@@ -108,7 +109,7 @@ const ProductForm = ({
                 name="quantity"
                 value={product?.quantity}
                 onChange={handleInputChange}
-                required
+                {...(isEditMode ? {} : { required: true })}
               />
 
               <label>Product Description:</label>
@@ -140,9 +141,9 @@ const ProductForm = ({
                 type="text"
                 placeholder="Manufacturer Country"
                 name="country"
-                value={product.manufacturingWarehouse?.country}
+                value={product?.manufacturingWarehouse?.country}
                 onChange={handleInputChange}
-                required
+                {...(isEditMode ? {} : { required: true })}
               />
 
               <label>Manufacturer State:</label>
@@ -152,7 +153,7 @@ const ProductForm = ({
                 name="state"
                 value={product?.manufacturingWarehouse?.state}
                 onChange={handleInputChange}
-                required
+                {...(isEditMode ? {} : { required: true })}
               />
 
               <label>Manufacturer City:</label>
@@ -162,7 +163,7 @@ const ProductForm = ({
                 name="city"
                 value={product?.manufacturingWarehouse?.city}
                 onChange={handleInputChange}
-                required
+                {...(isEditMode ? {} : { required: true })}
               />
 
               <label>Manufacturer Pincode:</label>
@@ -172,7 +173,7 @@ const ProductForm = ({
                 name="pincode"
                 value={product?.manufacturingWarehouse?.pincode}
                 onChange={handleInputChange}
-                required
+                {...(isEditMode ? {} : { required: true })}
               />
 
               <label>Manufacturer Admin Contact:</label>
@@ -182,7 +183,7 @@ const ProductForm = ({
                 name="warehouseAdminContact"
                 value={product?.manufacturingWarehouse?.warehouseAdminContact}
                 onChange={handleInputChange}
-                required
+                {...(isEditMode ? {} : { required: true })}
               />
 
               <label>Date of Manufacture:</label>
@@ -192,7 +193,7 @@ const ProductForm = ({
                 name="dateOfManufacture"
                 value={product?.manufacturingWarehouse?.dateOfManufacture}
                 onChange={handleInputChange}
-                required
+                {...(isEditMode ? {} : { required: true })}
               />
             </div>
 
@@ -201,7 +202,7 @@ const ProductForm = ({
               <label>Last stop : </label>
               <select
                 name="lastStop"
-                value={product.lastStop}
+                value={product?.lastStop}
                 onChange={handleInputChange}
               >
                 <option value="">Select</option>
@@ -215,7 +216,7 @@ const ProductForm = ({
               <label>Current Location : </label>
               <select
                 name="currentStop"
-                value={product.currentStop}
+                value={product?.currentStop}
                 onChange={handleInputChange}
               >
                 <option value="">Select</option>
@@ -229,7 +230,7 @@ const ProductForm = ({
               <label>Next Stop: </label>
               <select
                 name="nextStop"
-                value={product.nextStop}
+                value={product?.nextStop}
                 onChange={handleInputChange}
               >
                 <option value="">Select</option>
