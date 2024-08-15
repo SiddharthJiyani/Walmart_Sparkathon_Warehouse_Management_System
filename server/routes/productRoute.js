@@ -7,14 +7,14 @@ const {
     getProduct,
     deleteProduct,
     updateProduct,
-    getAllProducts
+    // getAllProducts
 } = require('../controllers/productController');
 const upload = require('../utiles/fileUpload');
 
 router.post('/', protect, upload.upload.single('image'), createProduct);
 router.patch('/:id', protect, upload.upload.single('image'), updateProduct);
 router.get('/', protect ,getProducts);
-router.get('/getall', protect , getAllProducts);
+// router.get('/getall', protect , getAllProducts);
 router.get('/:id', protect, getProduct);
 router.delete('/:id', protect, deleteProduct);
 

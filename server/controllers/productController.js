@@ -2,7 +2,7 @@ const asyncHandler = require('express-async-handler');
 const Product = require('../models/productModel');
 const {fileSizeFormatter} = require('../utiles/fileUpload');
 const cloudinary = require('cloudinary').v2;
- 
+
 //create product
 const createProduct = asyncHandler(async (req, res) => {
     const {name, sku, category, quantity, price, description, manufacturingWarehouse, lastStop, currentStop, nextStop} = req.body;
