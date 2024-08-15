@@ -67,7 +67,7 @@ const AddProduct = () => {
 
   const handleImageChange = (e) => {
     setProductImage(e.target.files[0]);
-    console.log(e.target.files[0]);
+    // console.log(e.target.files[0]);
     setImagePreview(URL.createObjectURL(e.target.files[0]));
   };
 
@@ -175,8 +175,10 @@ const saveProduct = async (e) => {
       }
   }
 
+  console.log('Image URL:', imageUrl);
+  console.log('Product:', product);
   // Now, send the product data to your backend
-  const productData = new FormData();
+  let productData = new FormData();
   productData.append("name", product.name);
   productData.append("sku", generateKSKU(product.category));
   productData.append("category", product.category);
@@ -207,7 +209,7 @@ const saveProduct = async (e) => {
       // console.log('Product created successfully:', data);
       toast.dismiss();
       toast.success('Product created successfully');
-      navigate('/dashboard');
+      // navigate('/dashboard');
   } catch (error) {
       console.error('Error:', error);
   }

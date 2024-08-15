@@ -12,14 +12,14 @@ cloudinary.config({
  
 //create product
 const createProduct = asyncHandler(async (req, res) => {
-    const {name, sku, category, quantity, price, description, manufacturingWarehouse, lastStop, currentStop, nextStop} = req.body;
+    const {name, sku, category, quantity, price, description, manufacturingWarehouse, lastStop, currentStop, nextStop,imageUrl} = req.body;
 
     //validation
     if(!name || !category || !quantity || !price || !description || !manufacturingWarehouse || !currentStop){
         res.status(400);
         throw new Error('Please add all fields');
     }
-
+    console.log('Manufacturing warehouse:', manufacturingWarehouse);
     let parsedManufacturingWarehouse;
     try {
         parsedManufacturingWarehouse = JSON.parse(manufacturingWarehouse);
