@@ -103,6 +103,16 @@ const getProduct = asyncHandler(async (req, res) => {
     res.status(200).json(product);
 })
 
+const getProductByName = asyncHandler(async (req, res) => {
+	const product = await Product.findOne({name: { $regex: new RegExp(name, "i") },});
+	//if product doesnt exist
+	if (!product) {
+		res.status(404);
+		throw new Error("Product not found");
+	}
+	res.status(200).json(product);
+});
+
 //delete product
 const deleteProduct = asyncHandler(async (req, res) => {
     const product = await Product.findById(req.params.id);
@@ -214,10 +224,11 @@ const getAllProducts = asyncHandler(async (req, res) => {
 
 
 module.exports = {
-    createProduct,
-    getProducts,
-    getProduct,
-    deleteProduct,
-    updateProduct,
-    getAllProducts
-}
+	createProduct,
+	getProducts,
+	getProduct,
+	deleteProduct,
+	updateProduct,
+	getAllProducts,
+	getProductByName
+};
