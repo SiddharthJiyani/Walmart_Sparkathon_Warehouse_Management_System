@@ -125,7 +125,7 @@ const deleteProduct = asyncHandler(async (req, res) => {
 
 //update product
 const updateProduct = asyncHandler(async (req, res) => {
-    const {name, category, quantity, price, description, manufacturingWarehouse, lastStop, currentStop, nextStop } = req.body;
+    const {name, category, quantity, price, description, manufacturingWarehouse, lastStop, currentStop, nextStop,imageUrl } = req.body;
     const  {id} = req.params;
 
     const product = await Product.findById(id);
@@ -181,7 +181,7 @@ const updateProduct = asyncHandler(async (req, res) => {
                 quantity,
                 price,
                 description,
-                image : Object.keys(fileData).length === 0 ? product?.image : fileData,
+                image : imageUrl,
                 manufacturingWarehouse: parsedManufacturingWarehouse,
                 lastStop,
                 currentStop,

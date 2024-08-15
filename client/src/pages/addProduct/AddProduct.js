@@ -175,8 +175,6 @@ const saveProduct = async (e) => {
       }
   }
 
-  console.log('Image URL:', imageUrl);
-  console.log('Product:', product);
   // Now, send the product data to your backend
   let productData = new FormData();
   productData.append("name", product.name);
@@ -201,8 +199,8 @@ const saveProduct = async (e) => {
 
       if (!response.ok) {
         toast.dismiss();
-          toast.error('Failed to create product');
-          throw new Error('Failed to create product');
+        toast.error('Failed to create product');
+        throw new Error('Failed to create product');
       }
 
       // const data = await response.json();
