@@ -2,22 +2,29 @@ const asyncHandler = require('express-async-handler');
 const Product = require('../models/productModel');
 const {fileSizeFormatter} = require('../utiles/fileUpload');
 const cloudinary = require('cloudinary').v2;
+
+
+cloudinary.config({
+    cloud_name: process.env.CLOUD_NAME,
+    api_key: process.env.API_KEY,
+    api_secret: process.env.API_SECRET,
+});
  
 //create product
 const createProduct = asyncHandler(async (req, res) => {
-    const {name, sku, category, quantity, price, description, manufacturingWarehouse, lastStop, currentStop, nextStop} = req.body;
-    console.log('Received data:', {
-        name,
-        sku,
-        category,
-        quantity,
-        price,
-        description,
-        manufacturingWarehouse,
-        lastStop,
-        currentStop,
-        nextStop
-    });
+    const {name, sku, category, quantity, price, description, manufacturingWarehouse, lastStop, currentStop, nextStop,imageUrl} = req.body;
+    // console.log('Received data:', {
+    //     name,
+    //     sku,
+    //     category,
+    //     quantity,
+    //     price,
+    //     description,
+    //     manufacturingWarehouse,
+    //     lastStop,
+    //     currentStop,
+    //     nextStop
+    // });
     //validation
     if(!name || !category || !quantity || !price || !description || !manufacturingWarehouse || !currentStop){
         res.status(400);
@@ -34,7 +41,7 @@ const createProduct = asyncHandler(async (req, res) => {
 
 
     // handle image upload
-    let fileData = {};
+    // let fileData = {};
     // if (req.file) {
     //     // save image to cloudinary
     //     let uploadedFile;
@@ -43,6 +50,7 @@ const createProduct = asyncHandler(async (req, res) => {
     //             folder: "Walmart's Inventory",
     //             resource_type: 'image',
     //         });
+    //         console.log('Uploaded file:', uploadedFile);
     //     } catch (error) {
     //         res.status(500);
     //         throw new Error('Image upload failed');
@@ -56,6 +64,8 @@ const createProduct = asyncHandler(async (req, res) => {
     //     };
     // }   
 
+    // console.log('File data:', fileData);
+
 
     //create product
     const product = await Product.create({
@@ -66,7 +76,7 @@ const createProduct = asyncHandler(async (req, res) => {
         quantity,
         price,
         description,
-        image : fileData,
+        image : imageUrl,
         manufacturingWarehouse: parsedManufacturingWarehouse,
         lastStop,
         currentStop,
@@ -75,7 +85,7 @@ const createProduct = asyncHandler(async (req, res) => {
         console.log('Product created:', product);
     }).catch((error) => {
         console.error('Error creating product:', error);
-    });
+    }); 
     // console.log('ok');
     res.status(201).json(product);
 });

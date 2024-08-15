@@ -47,8 +47,10 @@ const ProductDetail = () => {
             <Card cardClass="group">
               {product?.image ? (
                 <img
-                  src={product.image.filePath}
-                  alt={product.image.fileName}
+                  src={product.image}
+                  alt="Product Image"
+                  height={200}
+                  width={200}
                 />
               ) : (
                 <p>No image set for this product</p>
