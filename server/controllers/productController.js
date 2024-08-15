@@ -6,18 +6,7 @@ const cloudinary = require('cloudinary').v2;
 //create product
 const createProduct = asyncHandler(async (req, res) => {
     const {name, sku, category, quantity, price, description, manufacturingWarehouse, lastStop, currentStop, nextStop} = req.body;
-    console.log('Received data:', {
-        name,
-        sku,
-        category,
-        quantity,
-        price,
-        description,
-        manufacturingWarehouse,
-        lastStop,
-        currentStop,
-        nextStop
-    });
+
     //validation
     if(!name || !category || !quantity || !price || !description || !manufacturingWarehouse || !currentStop){
         res.status(400);
@@ -72,7 +61,7 @@ const createProduct = asyncHandler(async (req, res) => {
         currentStop,
         nextStop
     }).then((product) => {
-        console.log('Product created:', product);
+        console.log('Product creation success');
     }).catch((error) => {
         console.error('Error creating product:', error);
     });
@@ -138,32 +127,40 @@ const updateProduct = asyncHandler(async (req, res) => {
     }
 
     //match product to user
-    if(product.user.toString() !== req.user.id){
-        res.status(401);
-        throw new Error('User not authorized');
+    // if(product.user.toString() !== req.user.id){
+    //     res.status(401);
+    //     throw new Error('User not authorized');
+    // }
+
+    let parsedManufacturingWarehouse;
+    try {
+        parsedManufacturingWarehouse = JSON.parse(manufacturingWarehouse);
+    } catch (error) {
+        res.status(400);
+        throw new Error('Invalid manufacturingWarehouse format');
     }
 
-    //handle image upload
+    //handle image upload @siddharth also set the image in the edit product so previous image is not lost
     let fileData={};
-    if(req.file){
-        //save image to cloudinary
-        let uploadadedFile ;
-        try {
-            uploadadedFile = await cloudinary.uploader.upload(req.file.path),{
-                folder : 'SoftLoom App',
-                resource_type : 'image',
-            }
-        }catch(error){
-            res.status(500);
-            throw new Error('Image upload failed');
-        }
-        fileData = {
-            fileName : req.file.originalname,
-            filePath : uploadadedFile.secure_url,
-            fileType : req.file.mimetype,
-            fileSize : fileSizeFormatter(req.file, 2),
-        };
-    }
+    // if(req.file){
+    //     //save image to cloudinary
+    //     let uploadadedFile ;
+    //     try {
+    //         uploadadedFile = await cloudinary.uploader.upload(req.file.path),{
+    //             folder : 'SoftLoom App',
+    //             resource_type : 'image',
+    //         }
+    //     }catch(error){
+    //         res.status(500);
+    //         throw new Error('Image upload failed');
+    //     }
+    //     fileData = {
+    //         fileName : req.file.originalname,
+    //         filePath : uploadadedFile.secure_url,
+    //         fileType : req.file.mimetype,
+    //         fileSize : fileSizeFormatter(req.file, 2),
+    //     };
+    // }
 
     //update product
     const updatedProduct = await Product.findByIdAndUpdate(
@@ -175,7 +172,7 @@ const updateProduct = asyncHandler(async (req, res) => {
                 price,
                 description,
                 image : Object.keys(fileData).length === 0 ? product?.image : fileData,
-                manufacturingWarehouse,
+                manufacturingWarehouse: parsedManufacturingWarehouse,
                 lastStop,
                 currentStop,
                 nextStop
@@ -184,7 +181,13 @@ const updateProduct = asyncHandler(async (req, res) => {
             new: true,
             runValidators: true
         }
-    );
+    ).then(() => {
+        console.log('Product updated successfully');
+    }).catch((error) => {
+        console.error('Error updating product:', error);
+    })
+    // console.log("Updated product:", updatedProduct);
+    
     res.status(200).json(updatedProduct);
 })
 
