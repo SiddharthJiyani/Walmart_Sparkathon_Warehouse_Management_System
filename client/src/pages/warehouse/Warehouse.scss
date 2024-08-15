@@ -1,0 +1,46 @@
+.warehouse-container {
+    padding: 20px;
+  }
+  
+  .warehouse-list {
+    margin-top: 20px;
+  }
+  
+  .warehouse-list h4 {
+    margin-bottom: 10px;
+    font-size: 2.3rem; /* Increase the font size of the header */
+  }
+  
+  .warehouse-list table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 1.6rem; /* Increase the font size of the table text */
+  }
+  
+  .warehouse-list th, .warehouse-list td {
+    padding: 15px; /* Increase padding for a more spacious look */
+    border: 1px solid #ddd;
+    text-align: left;
+  }
+  
+  .warehouse-list th {
+    background-color: #e0e0e0; /* Light grey background for table header */
+    color: #333; /* Darker text color for better contrast */
+  }
+  
+  .warehouse-list tbody tr:nth-child(even) {
+    background-color: #f2f2f2; /* Light grey background for even rows */
+    font-size:medium;
+    color: #000;
+  }
+  
+  .warehouse-list tbody tr:nth-child(odd) {
+    background-color: #ffffff; /* White background for odd rows */
+    font-size:medium;
+    color: #000;
+}
+
+.warehouse-list tbody tr:hover {
+    background-color: #afd2f3; /* Slightly darker grey on hover */
+  }
+  
