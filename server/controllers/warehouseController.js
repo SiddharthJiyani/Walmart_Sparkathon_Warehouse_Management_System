@@ -3,7 +3,9 @@ const Warehouse = require('../models/warehouseModel');
 
 // Create
 const createWarehouse = asyncHandler(async (req, res) => {
+
     const { name, type, country, state, city, pincode,  warehouseAdminContact} = req.body;
+
 
     if (!name || !type || !country || !state || !city || !pincode || !warehouseAdminContact) {
         res.status(400);

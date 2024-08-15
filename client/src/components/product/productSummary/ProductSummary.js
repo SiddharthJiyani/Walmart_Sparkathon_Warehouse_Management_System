@@ -30,6 +30,7 @@ const ProductSummary = ({ products }) => {
   const totalStoreValue = useSelector(selectTotalStoreValue);
   const outOfStock = useSelector(selectOutOfStock);
   const category = useSelector(selectCategory);
+  console.log('category', category);
 
   useEffect(() => {
     dispatch(CALC_STORE_VALUE(products));

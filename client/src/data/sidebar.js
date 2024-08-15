@@ -2,6 +2,7 @@ import { FaTh, FaRegChartBar, FaCommentAlt } from "react-icons/fa";
 import { BiImageAdd } from "react-icons/bi";
 import { ImProfile } from "react-icons/im";
 import { MdEditSquare } from "react-icons/md";
+import { FaWarehouse } from "react-icons/fa6";
 
 
 
@@ -15,6 +16,12 @@ const menu = [
     title: "Add Product",
     icon: <BiImageAdd />,
     path: "/add-product",
+  },
+  {
+    title: "Warehouse",
+    icon: <FaWarehouse />,
+    path: "/warehouse"
+    ,
   },
   {
     title: "Account",
