@@ -6,8 +6,8 @@ const InfoBox = ({ bgColor, title, count, icon }) => {
     <div className={`info-box ${bgColor}`}>
       <span className="info-icon --color-white">{icon}</span>
       <span className="info-text">
-        <p>{title}</p>
-        <h4>{count}</h4>
+        <p className="--color-white">{title}</p>
+        <h4 className="--color-white">{count}</h4>
       </span>
     </div>
   );

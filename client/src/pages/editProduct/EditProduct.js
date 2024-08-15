@@ -10,6 +10,7 @@ import {
   selectProduct,
   updateProduct,
 } from "../../redux/features/product/productSlice";
+import { toast } from "react-toastify";
 
 const EditProduct = () => {
   const { id } = useParams();
@@ -30,9 +31,8 @@ const EditProduct = () => {
 
   useEffect(() => {
     setProduct(productEdit);
-
     setImagePreview(
-      productEdit && productEdit.image ? `${productEdit.image.filePath}` : null
+      productEdit && productEdit.image ? `${productEdit.image}` : null
     );
 
     setDescription(
@@ -40,35 +40,100 @@ const EditProduct = () => {
     );
   }, [productEdit]);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setProduct({ ...product, [name]: value });
-  };
+  // const handleInputChange = (e) => {
+  //   const { name, value } = e.target;
+  //   setProduct({ ...product, [name]: value });
+  // };
 
   const handleImageChange = (e) => {
     setProductImage(e.target.files[0]);
     setImagePreview(URL.createObjectURL(e.target.files[0]));
   };
 
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+
+    if (name in product.manufacturingWarehouse) {
+      setProduct((prevProduct) => ({
+        ...prevProduct,
+        manufacturingWarehouse: {
+          ...prevProduct.manufacturingWarehouse,
+          [name]: value,
+        },
+      }));
+    } else {
+      setProduct((prevProduct) => ({
+        ...prevProduct,
+        [name]: value,
+      }));
+    }
+  };
+ 
   const saveProduct = async (e) => {
     e.preventDefault();
-    const formData = new FormData();
-    formData.append("name", product?.name);
+    toast.loading ('Updating product...');
+    const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+    const productId = product?._id;
+    const API_URL = `${BACKEND_URL}/api/products/${productId}`;
 
-    formData.append("category", product?.category);
-    formData.append("quantity", product?.quantity);
-    formData.append("price", product?.price);
-    formData.append("description", description);
-    if (productImage) {
-      formData.append("image", productImage);
+    console.log('ProductImage:', productImage);
+    let imageUrl = '';
+    if (productImage) {        
+        try {
+          const image = new FormData();
+          image.append('file', productImage);
+          image.append('upload_preset', 'Walmart'); // Cloudinary preset
+          image.append('cloud_name', 'djodcayme');
+          const response = await fetch(
+            "https://api.cloudinary.com/v1_1/djodcayme/image/upload",
+            { method: "post", body: image }
+          );
+          const imgData = await response.json();
+          imageUrl = imgData.url.toString();
+        } catch (error) {
+            console.error('Error uploading image:', error);
+            return;
+        }
     }
 
-    console.log(...formData);
+    const formData = new FormData();
+    formData.append("name", product.name);
+    formData.append("category", product.category);
+    formData.append("quantity", Number(product.quantity));
+    formData.append("price", product.price);
+    formData.append("description", description);
+    formData.append("imageUrl", imageUrl);
+    formData.append("manufacturingWarehouse", JSON.stringify(product.manufacturingWarehouse));
+    formData.append("lastStop", product.lastStop);
+    formData.append("currentStop", product.currentStop);
+    formData.append("nextStop", product.nextStop);
 
-    await dispatch(updateProduct({ id, formData }));
-    await dispatch(getProducts());
-    navigate("/dashboard");
-  };
+    for (var key of formData.entries()) {
+      console.log(key[0] + ', ' + key[1]);
+    }
+
+    try {
+        const response = await fetch(API_URL, {
+            method: 'PATCH',
+            body: formData,
+            credentials: 'include',
+        });
+
+        if (!response.ok) {
+          toast.dismiss();
+          toast.error('Failed to edit product');
+          throw new Error('Failed to edit product');
+        }
+
+        // const data = await response.json();
+        // console.log('Product created successfully:', data);
+        toast.dismiss();
+        toast.success('Product updated successfully');
+        navigate('/dashboard');
+    } catch (error) {
+        console.error('Error:', error);
+    }
+};
 
   return (
     <div>
@@ -83,6 +148,7 @@ const EditProduct = () => {
         handleInputChange={handleInputChange}
         handleImageChange={handleImageChange}
         saveProduct={saveProduct}
+        isEditMode={true}
       />
     </div>
   );

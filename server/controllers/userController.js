@@ -221,65 +221,75 @@ const changePassword = asyncHandler(async (req, res) => {
 
 //reset the password
 const forgotPassword = asyncHandler(async (req, res) => {
-    const {email} = req.body;
-    const user = await User.findOne({email});
+    const { email } = req.body;
+    const user = await User.findOne({ email });
 
-    if(!user){
+    console.log(user);
+
+    if (!user) {
         res.status(404);
         throw new Error('User does not exist');
     }
 
-    //delete token if it exists 
-    let token = await Token.findOne({userId: user._id});
-    if(token){
+    // Delete token if it exists
+    let token = await Token.findOne({ userId: user._id });
+    if (token) {
         await token.deleteOne();
     }
 
-    //generate reset token
+    // Generate reset token
     let resetToken = crypto.randomBytes(32).toString('hex') + user._id;
 
-    //hash token before saving to database
+    // Hash token before saving to database
     const hashedToken = crypto.createHash('sha256').update(resetToken).digest('hex');
 
-    //save token to database
+    // Save token to database
     await new Token({
         userId: user._id,
         token: hashedToken,
         createdAt: Date.now(),
-        expiresAt: Date.now() + 30 * (60 * 1000) //expires in 30 minutes
+        expiresAt: Date.now() + 30 * (60 * 1000) // expires in 30 minutes
     }).save();
 
-    //construct reset url
+    // Construct reset URL
     const resetUrl = `${process.env.FRONTEND_URL}/resetpassword/${resetToken}`;
 
-    //reset email
+    console.log('resetUrl', resetUrl);
+
+    // Reset email
     const message = `
-        <h2>Hello ${user.name}</h2>
-        <p>Please use the url below to reset your password</p>
-        <p>This reset link expires in 30 minutes</p>
+    <div style="font-family: Arial, sans-serif; color: #333; padding: 20px; max-width: 600px; margin: auto; border: 1px solid #ddd; border-radius: 5px;">
+        <h2 style="color: #333;">Hello ${user.name},</h2>
+        <p style="color: #555;">You recently requested to reset your password for your Walmart account. Click the button below to reset it. This password reset is only valid for the next 30 minutes.</p>
+        <p style="text-align: center;">
+            <a href="${resetUrl}" style="display: inline-block; padding: 10px 20px; margin: 20px 0; font-size: 16px; color: #fff; background-color: #007bff; border-radius: 5px; text-decoration: none;">Reset Password</a>
+        </p>
+        <p style="color: #555;">If you did not request a password reset, please ignore this email or contact support if you have questions.</p>
+        <p style="color: #555;">Thank you,<br><strong>Walmart Team</strong></p>
+    </div>
+    <p style="color: #aaa; font-size: 12px; text-align: center;">If you're having trouble with the button above, copy and paste the URL below into your web browser:<br>${resetUrl}</p>
+`;
+ 
 
-
-        <a href=${resetUrl} clicktracking=off>${resetUrl}</a>
-
-        <p>Regards</p>
-        <p><strong>SoftLoom</strong>Team</p>
-        `;
-
-    const subject = 'SoftLoom : Password reset request';
+    const subject = 'Walmart | Password reset request';
     const sent_to = user.email;
-    const sent_from = process.env.EMAIL_USER;
+    const sent_from = process.env.MAIL_USER;
 
-    try{
-        await sendEmail(subject, message, sent_to, sent_from);
+    console.log('sent_to', sent_to);
+    console.log('sent_from', sent_from);
+
+    try {
+        await sendEmail(subject, message, sent_to, "walmart@gmail.com");
         res.status(200).json({
             success: true,
             message: 'Email sent'
-        })
-    }catch(err){
+        });
+    } catch (err) {
         res.status(500);
         throw new Error('Error sending email');
-    }   
+    }
 });
+
 
 //Reset password
 const resetPassword = asyncHandler(async (req, res) => {

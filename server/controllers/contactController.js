@@ -17,9 +17,11 @@ const contactUs = asyncHandler(async (req, res, next) => {
         throw new Error('Please add subject and message');
     }
 
-    const send_to = process.env.EMAIL_USER;
-    const sent_from = process.env.EMAIL_USER;
+    const send_to = process.env.MAIL_USER;
+    const sent_from = process.env.MAIL_USER;
     const reply_to = user.email;
+
+    console.table([subject,message,send_to,sent_from,reply_to]);
     try{
         await sendEmail(subject,message,send_to,sent_from,reply_to);
         res.status(200).json({sucess:true,message :'Message sent'});

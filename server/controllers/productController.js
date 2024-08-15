@@ -3,37 +3,58 @@ const Product = require('../models/productModel');
 const {fileSizeFormatter} = require('../utiles/fileUpload');
 const cloudinary = require('cloudinary').v2;
 
+
+cloudinary.config({
+    cloud_name: process.env.CLOUD_NAME,
+    api_key: process.env.API_KEY,
+    api_secret: process.env.API_SECRET,
+});
+ 
 //create product
 const createProduct = asyncHandler(async (req, res) => {
-    const {name, sku, category, quantity, price, description, manufacturingWarehouse, lastStop, currentStop, nextStop} = req.body;
+    const {name, sku, category, quantity, price, description, manufacturingWarehouse, lastStop, currentStop, nextStop,imageUrl} = req.body;
 
     //validation
     if(!name || !category || !quantity || !price || !description || !manufacturingWarehouse || !currentStop){
         res.status(400);
         throw new Error('Please add all fields');
     }
-
-    //handle image upload
-    let fileData={};
-    if(req.file){
-        //save image to cloudinary
-        let uploadadedFile ;
-        try {
-            uploadadedFile = await cloudinary.uploader.upload(req.file.path),{
-                folder : "Walmart's Inventory",
-                resource_type : 'image',
-            }
-        }catch(error){
-            res.status(500);
-            throw new Error('Image upload failed');
-        }
-        fileData = {
-            fileName : req.file.originalname,
-            filePath : uploadadedFile.secure_url,
-            fileType : req.file.mimetype,
-            fileSize : fileSizeFormatter(req.file, 2),
-        };
+    console.log('Manufacturing warehouse:', manufacturingWarehouse);
+    let parsedManufacturingWarehouse;
+    try {
+        parsedManufacturingWarehouse = JSON.parse(manufacturingWarehouse);
+    } catch (error) {
+        res.status(400);
+        throw new Error('Invalid manufacturingWarehouse format');
     }
+
+
+    // handle image upload
+    // let fileData = {};
+    // if (req.file) {
+    //     // save image to cloudinary
+    //     let uploadedFile;
+    //     try {
+    //         uploadedFile = await cloudinary.uploader.upload(req.file.path, {
+    //             folder: "Walmart's Inventory",
+    //             resource_type: 'image',
+    //         });
+    //         console.log('Uploaded file:', uploadedFile);
+    //     } catch (error) {
+    //         res.status(500);
+    //         throw new Error('Image upload failed');
+    //     }
+        
+    //     fileData = {
+    //         fileName: req.file.originalname,
+    //         filePath: uploadedFile.secure_url,
+    //         fileType: req.file.mimetype,
+    //         fileSize: fileSizeFormatter(req.file.size, 2),
+    //     };
+    // }   
+
+    // console.log('File data:', fileData);
+
 
     //create product
     const product = await Product.create({
@@ -44,12 +65,17 @@ const createProduct = asyncHandler(async (req, res) => {
         quantity,
         price,
         description,
-        image : fileData,
-        manufacturingWarehouse,
+        image : imageUrl,
+        manufacturingWarehouse: parsedManufacturingWarehouse,
         lastStop,
         currentStop,
         nextStop
-    });
+    }).then((product) => {
+        console.log('Product creation success');
+    }).catch((error) => {
+        console.error('Error creating product:', error);
+    }); 
+    // console.log('ok');
     res.status(201).json(product);
 });
 
@@ -70,10 +96,10 @@ const getProduct = asyncHandler(async (req, res) => {
     }
 
     //match product to user
-    if(product.user.toString() !== req.user.id){
-        res.status(401);
-        throw new Error('User not authorized');
-    }
+    // if(product.user.toString() !== req.user.id){
+    //     res.status(401);
+    //     throw new Error('User not authorized');
+    // }
     res.status(200).json(product);
 })
 
@@ -99,7 +125,7 @@ const deleteProduct = asyncHandler(async (req, res) => {
 
 //update product
 const updateProduct = asyncHandler(async (req, res) => {
-    const {name, category, quantity, price, description, manufacturingWarehouse, lastStop, currentStop, nextStop } = req.body;
+    const {name, category, quantity, price, description, manufacturingWarehouse, lastStop, currentStop, nextStop,imageUrl } = req.body;
     const  {id} = req.params;
 
     const product = await Product.findById(id);
@@ -111,32 +137,40 @@ const updateProduct = asyncHandler(async (req, res) => {
     }
 
     //match product to user
-    if(product.user.toString() !== req.user.id){
-        res.status(401);
-        throw new Error('User not authorized');
+    // if(product.user.toString() !== req.user.id){
+    //     res.status(401);
+    //     throw new Error('User not authorized');
+    // }
+
+    let parsedManufacturingWarehouse;
+    try {
+        parsedManufacturingWarehouse = JSON.parse(manufacturingWarehouse);
+    } catch (error) {
+        res.status(400);
+        throw new Error('Invalid manufacturingWarehouse format');
     }
 
-    //handle image upload
+    //handle image upload @siddharth also set the image in the edit product so previous image is not lost
     let fileData={};
-    if(req.file){
-        //save image to cloudinary
-        let uploadadedFile ;
-        try {
-            uploadadedFile = await cloudinary.uploader.upload(req.file.path),{
-                folder : 'SoftLoom App',
-                resource_type : 'image',
-            }
-        }catch(error){
-            res.status(500);
-            throw new Error('Image upload failed');
-        }
-        fileData = {
-            fileName : req.file.originalname,
-            filePath : uploadadedFile.secure_url,
-            fileType : req.file.mimetype,
-            fileSize : fileSizeFormatter(req.file, 2),
-        };
-    }
+    // if(req.file){
+    //     //save image to cloudinary
+    //     let uploadadedFile ;
+    //     try {
+    //         uploadadedFile = await cloudinary.uploader.upload(req.file.path),{
+    //             folder : 'SoftLoom App',
+    //             resource_type : 'image',
+    //         }
+    //     }catch(error){
+    //         res.status(500);
+    //         throw new Error('Image upload failed');
+    //     }
+    //     fileData = {
+    //         fileName : req.file.originalname,
+    //         filePath : uploadadedFile.secure_url,
+    //         fileType : req.file.mimetype,
+    //         fileSize : fileSizeFormatter(req.file, 2),
+    //     };
+    // }
 
     //update product
     const updatedProduct = await Product.findByIdAndUpdate(
@@ -147,8 +181,8 @@ const updateProduct = asyncHandler(async (req, res) => {
                 quantity,
                 price,
                 description,
-                image : Object.keys(fileData).length === 0 ? product?.image : fileData,
-                manufacturingWarehouse,
+                image : imageUrl,
+                manufacturingWarehouse: parsedManufacturingWarehouse,
                 lastStop,
                 currentStop,
                 nextStop
@@ -157,8 +191,25 @@ const updateProduct = asyncHandler(async (req, res) => {
             new: true,
             runValidators: true
         }
-    );
+    ).then(() => {
+        console.log('Product updated successfully');
+    }).catch((error) => {
+        console.error('Error updating product:', error);
+    })
+    // console.log("Updated product:", updatedProduct);
+    
     res.status(200).json(updatedProduct);
+})
+
+const getAllProducts = asyncHandler(async (req, res) => {
+    try{
+        const products = await Product.find({})
+        res.status(200).json(products);
+    }
+    catch(error){
+        res.status(500);
+        throw new Error('Server error');
+    }
 })
 
 
@@ -167,5 +218,6 @@ module.exports = {
     getProducts,
     getProduct,
     deleteProduct,
-    updateProduct
+    updateProduct,
+    getAllProducts
 }

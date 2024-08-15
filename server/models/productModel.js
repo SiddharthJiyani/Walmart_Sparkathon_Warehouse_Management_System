@@ -45,7 +45,7 @@ const productSchema = new mongoose.Schema({
         default:"SKU",
         trim: true
     },
-    category: {
+    category: { 
         type: String,
         required: [true, 'Please add a category'],
         trim: true
@@ -66,8 +66,8 @@ const productSchema = new mongoose.Schema({
         trim: true
     },
     image:{
-        type:Object,
-        default:{}
+        type:String,
+        default:'https://jubilantconsumer.com/wp-content/themes/jubilant/assets/img/product.png'
     },
     //can be many different product manufacturers
     manufacturingWarehouse: {

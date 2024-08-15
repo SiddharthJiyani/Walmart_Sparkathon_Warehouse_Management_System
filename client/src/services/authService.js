@@ -160,7 +160,6 @@ export const changePassword = async (formData) => {
 export const getWarehouses = async () => {
   try {
     const response = await axios.get(`${BACKEND_URL}/api/warehouses/`);
-    console.table(response.data);
     return response.data;
   } catch (error) {
     const message =
