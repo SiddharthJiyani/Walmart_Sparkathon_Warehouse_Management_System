@@ -16,13 +16,16 @@ const Contact = () => {
   };
 
   const sendEmail = async (e) => {
+    toast.loading("Sending message...");
     e.preventDefault();
     try {
       const response = await axios.post(`${BACKEND_URL}/api/contactus`, data);
       setSubject("");
       setMessage("");
+      toast.dismiss();
       toast.success(response.data.message);
     } catch (error) {
+      toast.dismiss();
       toast.error(error.message);
     }
   };
